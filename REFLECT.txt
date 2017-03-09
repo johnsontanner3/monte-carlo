@@ -21,7 +21,7 @@ of the three versions of your program (DFS, Quick Find, and weighted quick
 union with path compression). Use PercolationStats(80,40)
 3A DFS: 532.0		
 3B Quick Find: 676.0
-3C Weighted quick union with path compression: 119.0
+3C Weighted quick union with path compression: 66.0
 
 Problem 4: Give a formula (using Big-Oh notation) of the running time on your computer (in seconds) as a function of both N and T.
 DFS: O(N^2 log T)
@@ -42,9 +42,9 @@ For QuickFind...
 5C 1 year: N = ~7000
 
 For Weighted QUWPC...
-5A 1 minute: N = ~8000
-5B 1 day: N = ~7e8
-5C 1 year: N = ~26e10
+5A 1 minute: N = ~13000
+5B 1 day: N = ~1e9
+5C 1 year: N = ~4e11
 
 Problem 6: Give a formula (using Big-Oh notation) that describes the amount
 of memory (in bytes) that your IPercolate implementation consumes as a function of N.
