@@ -48,12 +48,23 @@ public class QuickFind implements IUnionFind {
 
 	// return id of component corresponding to element x
 	public int find(int x) {
+		// TODO: add IndexOutOfBoundsException
 		return myID[x];
+//		int n = myID.length;
+//        if (x < 0 || x >= n) 
+//            throw new IndexOutOfBoundsException("index " + x + " is not between 0 and " + (n-1));
+//		// this method finds the root of x 
+//		while (x != myID[x])
+//			x = myID[x];
+//		return x;
 	}
 
 	// are elements p and q in the same component?
 	public boolean connected(int p, int q) {
 		return myID[p] == myID[q];
+		
+		// this method determines if roots are equivalent
+//		return find(p) == find(q);
 	}
 
 	// merge components containing p and q
@@ -65,5 +76,11 @@ public class QuickFind implements IUnionFind {
 			if (myID[i] == pid)
 				myID[i] = myID[q];
 		myComponents -= 1;
+//		int pRoot = find(p);
+//		int qRoot = find(q);
+//		if (pRoot == qRoot)
+//			return;
+//		myID[pRoot] = qRoot;
+//		myComponents--;
 	}
 }
