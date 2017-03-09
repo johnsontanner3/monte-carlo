@@ -33,7 +33,7 @@ public class PercolationUF implements IPercolate {
 		myGrid = new int[n][n];
 		for (int[] row: myGrid)
 			Arrays.fill(row, BLOCKED);
-		qf = new QuickFind(n*n + 2);
+		qf = new QuickUWPC(n*n + 2);
 		VIRT_SOURCE = n*n;
 		VIRT_SINK = n*n + 1;
 	}
