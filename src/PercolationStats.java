@@ -25,7 +25,8 @@ public class PercolationStats {
 	private int mySize;
 	private int t;
 	private List<Point> shuffled;
-	public List<PercolationUF> myRuns;
+	// public List<PercolationUF> myRuns;
+	private PercolationUF[] myRuns;
 
 	
 	// perform T independent experiments on an N-by-N grid
@@ -36,11 +37,15 @@ public class PercolationStats {
 		mySize = N;
 		t = T;
 		shuffled = getShuffledCells();
-		myRuns = new ArrayList<PercolationUF>();
-		int count = 0;
-		while (count < t){
-			myRuns.add(new PercolationUF(N));
-			count++;
+		// myRuns = new ArrayList<PercolationUF>();
+//		int count = 0;
+//		while (count < t){
+//			myRuns.add(new PercolationUF(N));
+//			count++;
+//		}
+		myRuns = new PercolationUF[t];
+		for (int i=0; i<t; i++){
+			myRuns[i] = new PercolationUF(N);
 		}
 	}
 	
