@@ -74,13 +74,25 @@ public class PercolationStats {
 			total += totalOpened(p);
 		return (total/t) / (mySize*mySize); // mySize*mySize;
 	}
+	
+	private void flush() {
+		myRuns = new PercolationUF[t];
+		for (int i=0; i<t; i++){
+			myRuns[i] = new PercolationUF(mySize);
+		}
+	}
+	
 	// sample standard deviation of percolation threshold
 	public double stddev() {
 		double myMean = mean();
 		double runningSum = 0.0;
+		// need to wipe myRuns	
+		flush();
 		for (PercolationUF p: myRuns){
-			double temp = totalOpened(p) / (mySize*mySize);
-			runningSum += (temp - myMean) * (temp - myMean);
+			double temp = totalOpened(p);
+			// System.out.println(temp);
+			temp = temp / (mySize*mySize);
+			runningSum += ((temp - myMean) * (temp - myMean));
 		}
 		return Math.sqrt((runningSum / (t-1)));
 			
@@ -101,7 +113,7 @@ public class PercolationStats {
 	// print out values for testing &  analysis
 	public static void main(String[] args) {
 		double start = System.currentTimeMillis();
-		PercolationStats test = new PercolationStats(80, 40);
+		PercolationStats test = new PercolationStats(20, 2);
 		System.out.println("Mean: "+ test.mean());
 		System.out.println("Standard Deviation: "+ test.stddev());
 		System.out.println("Lower Bound: "+ test.confidenceLow());
