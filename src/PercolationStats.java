@@ -24,7 +24,7 @@ public class PercolationStats {
 	private int mySize;
 	private int t;
 	private List<Point> shuffled;
-	private List<PercolationUF> myRuns;
+	public List<PercolationUF> myRuns;
 
 	
 	// perform T independent experiments on an N-by-N grid
@@ -95,7 +95,7 @@ public class PercolationStats {
 	// print out values for testing &  analysis
 	public static void main(String[] args) {
 		double start = System.currentTimeMillis();
-		PercolationStats test = new PercolationStats(120, 30);
+		PercolationStats test = new PercolationStats(80, 40);
 		System.out.println("Mean: "+ test.mean());
 		System.out.println("Standard Deviation: "+ test.stddev());
 		System.out.println("Lower Bound: "+ test.confidenceLow());
