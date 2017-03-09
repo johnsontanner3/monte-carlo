@@ -37,6 +37,8 @@ public class PercolationDFS implements IPercolate {
 	public PercolationDFS(int n) {
 		// TODO complete constructor and add necessary instance variables
 		// I suppose we'll use random to generate random grids 
+		if (n <= 0)
+			throw new IllegalArgumentException();
 		myGrid = new int[n][n];
 		myOpenSites = 0;
 		for (int[] row: myGrid)

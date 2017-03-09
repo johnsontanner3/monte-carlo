@@ -29,6 +29,8 @@ public class PercolationUF implements IPercolate {
 	 * a IUnionFind object to determine whether cells are full
 	 */
 	public PercolationUF(int n) {
+		if (n <= 0)
+			throw new IllegalArgumentException();
 		myOpenSites = 0;
 		myGrid = new int[n][n];
 		for (int[] row: myGrid)

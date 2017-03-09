@@ -20,30 +20,30 @@ public class PercolationStats {
 	public static int RANDOM_SEED = 1234;
 	public static Random ourRandom = new Random(RANDOM_SEED);
 	// choose the thing you wanna test 
-	private PercolationDFS perc;
+	// private PercolationUF perc;
 	private int mySize;
 	private int t;
 	private List<Point> shuffled;
-	private List<Integer> myRuns;
+	private List<PercolationUF> myRuns;
 
 	
 	// perform T independent experiments on an N-by-N grid
 	public PercolationStats(int N, int T){
 		if (N <= 0 || T <= 0)
 			throw new IllegalArgumentException();
-		perc = new PercolationDFS(N);
+		// perc = new PercolationUF(N);
 		mySize = N;
 		t = T;
 		shuffled = getShuffledCells();
-		myRuns = new ArrayList<Integer>();
+		myRuns = new ArrayList<PercolationUF>();
 		int count = 0;
 		while (count < t){
-			myRuns.add(totalOpened());
+			myRuns.add(new PercolationUF(N));
 			count++;
 		}
 	}
 	
-	public List<Point> getShuffledCells() {
+	private List<Point> getShuffledCells() {
 		ArrayList<Point> list = new ArrayList<Point>();
 		for(int i=0; i<mySize; i++)
 			for (int j=0; j<mySize; j++){
@@ -53,37 +53,34 @@ public class PercolationStats {
 		return list;
 	}
 
-	public int totalOpened(){
-		perc = new PercolationDFS(mySize);
-		shuffled = getShuffledCells();
+	private int totalOpened(PercolationUF perc){
 		for (Point cell : shuffled){
 			perc.open(cell.x, cell.y);
-			if (perc.percolates()){
+			if (perc.percolates())
 				break;
-			}
 		}
 		return perc.numberOfOpenSites();
 	}
 	// sample mean of percolation threshold
 	public double mean() {
 		double total = 0.0;
-		for (int item : myRuns)
-			total += item;
+		for (PercolationUF p : myRuns)
+			total += totalOpened(p);
 		return (total/t) / (mySize*mySize); // mySize*mySize;
 	}
 	// sample standard deviation of percolation threshold
 	public double stddev() {
 		double myMean = mean();
 		double runningSum = 0.0;
-		for (int val: myRuns){
-			double temp = val / (mySize*mySize);
+		for (PercolationUF p: myRuns){
+			double temp = totalOpened(p) / (mySize*mySize);
 			runningSum += (temp - myMean) * (temp - myMean);
 		}
 		return Math.sqrt((runningSum / (t-1)));
 			
 	}
 	// low  endpoint of 95% confidence interval
-	public double delta(){
+	private double delta(){
 		return (1.96*stddev())/Math.sqrt(t);
 	}
 	
@@ -98,7 +95,7 @@ public class PercolationStats {
 	// print out values for testing &  analysis
 	public static void main(String[] args) {
 		double start = System.currentTimeMillis();
-		PercolationStats test = new PercolationStats(95, 30);
+		PercolationStats test = new PercolationStats(120, 30);
 		System.out.println("Mean: "+ test.mean());
 		System.out.println("Standard Deviation: "+ test.stddev());
 		System.out.println("Lower Bound: "+ test.confidenceLow());
