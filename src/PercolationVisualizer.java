@@ -53,6 +53,8 @@ public class PercolationVisualizer {
 					draw(row, col, mySize, Color.WHITE);
 			}
 	}
+
+	
 	public List<Point> getShuffledCells() {
 		ArrayList<Point> list = new ArrayList<Point>();
 		for(int i=0; i<mySize; i++)
@@ -62,6 +64,7 @@ public class PercolationVisualizer {
 		Collections.shuffle(list, ourRandom);
 		return list;
 	}
+	
 	public void run(){
 		// repeatedly declare sites open, draw, & pause until the system
 		// percolates
@@ -76,6 +79,8 @@ public class PercolationVisualizer {
 			if (myPerc.percolates())
 				break;
 		}
+		// ((PercolationUF) myPerc).removeBackWash();
+		// rbw();
 		drawGrid();
 	}
 	

@@ -1,6 +1,7 @@
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -20,33 +21,28 @@ import javax.swing.JOptionPane;
 public class PercolationStats {
 	public static int RANDOM_SEED = 1234;
 	public static Random ourRandom = new Random(RANDOM_SEED);
-	// choose the thing you wanna test 
-	// private PercolationUF perc;
-	private int mySize;
-	private int t;
-	private List<Point> shuffled;
-	// public List<PercolationUF> myRuns;
-	private PercolationUF[] myRuns;
 
+	private int mySize;
+	private int iterations;
+	private int numCells;
+	private List<Point> shuffled;
+	private PercolationUF[] myPercs;
+	private double myMean;
+	private int[] myOpenings;
 	
 	// perform T independent experiments on an N-by-N grid
 	public PercolationStats(int N, int T){
 		if (N <= 0 || T <= 0)
-			throw new IllegalArgumentException();
-		// perc = new PercolationUF(N);
+			throw new IllegalArgumentException("Invalid input for either N or T");
 		mySize = N;
-		t = T;
-		shuffled = getShuffledCells();
-		// myRuns = new ArrayList<PercolationUF>();
-//		int count = 0;
-//		while (count < t){
-//			myRuns.add(new PercolationUF(N));
-//			count++;
-//		}
-		myRuns = new PercolationUF[t];
-		for (int i=0; i<t; i++){
-			myRuns[i] = new PercolationUF(N);
+		numCells = N*N;
+		iterations = T;
+		myPercs = new PercolationUF[iterations];
+		for (int i=0; i<iterations; i++){
+			myPercs[i] = new PercolationUF(N);
 		}
+		//myMean = mean();
+		myOpenings = getRawOpenings(); // this is an array of raw openings 
 	}
 	
 	private List<Point> getShuffledCells() {
@@ -59,6 +55,15 @@ public class PercolationStats {
 		return list;
 	}
 
+	private int[] getRawOpenings(){
+		int[] temp = new int[iterations];
+		for (int i=0; i < iterations; i++){
+			shuffled = getShuffledCells(); // re-shuffle
+			temp[i] = totalOpened(myPercs[i]);
+		}
+		return temp;
+	}
+	
 	private int totalOpened(PercolationUF perc){
 		for (Point cell : shuffled){
 			perc.open(cell.x, cell.y);
@@ -67,39 +72,31 @@ public class PercolationStats {
 		}
 		return perc.numberOfOpenSites();
 	}
+	
 	// sample mean of percolation threshold
 	public double mean() {
 		double total = 0.0;
-		for (PercolationUF p : myRuns)
-			total += totalOpened(p);
-		return (total/t) / (mySize*mySize); // mySize*mySize;
+		for (int i=0; i<iterations; i++)
+			total += myOpenings[i];
+		return (total/iterations) / numCells; // mySize*mySize;
 	}
 	
-	private void flush() {
-		myRuns = new PercolationUF[t];
-		for (int i=0; i<t; i++){
-			myRuns[i] = new PercolationUF(mySize);
-		}
-	}
 	
 	// sample standard deviation of percolation threshold
 	public double stddev() {
-		double myMean = mean();
 		double runningSum = 0.0;
-		// need to wipe myRuns	
-		flush();
-		for (PercolationUF p: myRuns){
-			double temp = totalOpened(p);
-			// System.out.println(temp);
-			temp = temp / (mySize*mySize);
+		myMean = mean();
+		for (int i=0; i<iterations; i++){
+			double temp = myOpenings[i]; //totalOpened(p);
+			temp = temp / numCells;
 			runningSum += ((temp - myMean) * (temp - myMean));
 		}
-		return Math.sqrt((runningSum / (t-1)));
+		return Math.sqrt((runningSum / (iterations-1)));
 			
 	}
 	// low  endpoint of 95% confidence interval
 	private double delta(){
-		return (1.96*stddev())/Math.sqrt(t);
+		return (1.96*stddev())/Math.sqrt(iterations);
 	}
 	
 	public double confidenceLow(){
@@ -113,11 +110,13 @@ public class PercolationStats {
 	// print out values for testing &  analysis
 	public static void main(String[] args) {
 		double start = System.currentTimeMillis();
-		PercolationStats test = new PercolationStats(20, 2);
+		PercolationStats test = new PercolationStats(20, 10);
 		System.out.println("Mean: "+ test.mean());
 		System.out.println("Standard Deviation: "+ test.stddev());
 		System.out.println("Lower Bound: "+ test.confidenceLow());
 		System.out.println("Upper Bound: "+ test.confidenceHigh());
+		Arrays.sort(test.myOpenings);
+		System.out.println(Arrays.toString(test.myOpenings));
 		double end = System.currentTimeMillis();
 		System.out.println("Statistical calculation runtime: " + (end - start));
 	}

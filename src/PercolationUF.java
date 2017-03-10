@@ -23,6 +23,7 @@ public class PercolationUF implements IPercolate {
 	public IUnionFind qf;
 	private final int VIRT_SOURCE;
 	private final int VIRT_SINK;
+	private int mySize;
 	
 	/**
 	 * Constructs a Percolation object for a nxn grid that that creates
@@ -38,6 +39,7 @@ public class PercolationUF implements IPercolate {
 		qf = new QuickUWPC(n*n + 2);
 		VIRT_SOURCE = n*n;
 		VIRT_SINK = n*n + 1;
+		mySize = n;
 	}
 
 	/**
@@ -54,6 +56,7 @@ public class PercolationUF implements IPercolate {
 		return row*myGrid.length + col; // unique index for every cell in the grid 
 	}
 
+
 	public void open(int i, int j) {
 		// TODO complete open
 		// should be making union calls here 
@@ -65,10 +68,6 @@ public class PercolationUF implements IPercolate {
 		// int index = getIndex(i,j); // our index
 		// int id = qf.find(index); 		// this will change. tells us what set our cell is in currently  
 		validate(i,j);
-//		if (i==0){
-//			qf.union(index, VIRT_SOURCE);
-//		}	
-		//for (int m=0; m < myGrid.length; m++)
 		connect(i,j); // try to connect with all adjacent cells 
 	}
 
