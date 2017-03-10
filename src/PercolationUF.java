@@ -23,7 +23,7 @@ public class PercolationUF implements IPercolate {
 	public IUnionFind qf;
 	private final int VIRT_SOURCE;
 	private final int VIRT_SINK;
-	private int mySize;
+	// private int mySize;
 	
 	/**
 	 * Constructs a Percolation object for a nxn grid that that creates
@@ -39,7 +39,7 @@ public class PercolationUF implements IPercolate {
 		qf = new QuickUWPC(n*n + 2);
 		VIRT_SOURCE = n*n;
 		VIRT_SINK = n*n + 1;
-		mySize = n;
+		// mySize = n;
 	}
 
 	/**
