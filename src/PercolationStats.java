@@ -37,8 +37,8 @@ public class PercolationStats {
 		mySize = N;
 		numCells = N*N;
 		iterations = T;
-		myPercs = new PercolationUF[iterations];
-		for (int i=0; i<iterations; i++){
+		myPercs = new PercolationUF[T];
+		for (int i=0; i<T; i++){
 			myPercs[i] = new PercolationUF(N);
 		}
 		//myMean = mean();
